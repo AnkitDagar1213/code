@@ -1,0 +1,21 @@
+package org.example;
+
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+
+        String url = "http://api.weatherbit.io/v2.0/current?" +
+                "key=fcddc579157646339c40c257db0efe4f&" +
+                "city=palwal&state=haryana&" +
+                "country=india&postal_code=121102";
+        HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create(url)).build();
+        HttpClient httpClient = HttpClient.newBuilder().build();
+        HttpResponse<String> httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        //System.out.println(httpResponse.statusCode());
+        System.out.println(httpResponse.body());
+    }
+}
