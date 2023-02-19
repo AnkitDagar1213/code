@@ -1,14 +1,13 @@
-package com.example.Usermanagementsystem.controller;
+package com.Usermanagementsystem.controller;
 
-import com.example.Usermanagementsystem.model.User;
-import com.example.Usermanagementsystem.repository.UserRepository;
+import com.Usermanagementsystem.model.User;
+import com.Usermanagementsystem.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -20,19 +19,17 @@ import java.util.Optional;
 public class UserController {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @PostMapping("/addUser")
     public ResponseEntity<User> addUser(@Valid @RequestBody User user) {
-        user.setDate(LocalDate.now());
-        user.setTime(LocalTime.now());
-        User newUser = userRepository.save(user);
+        User newUser = userService.addUser(user);
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
 
     @GetMapping("/getUser/{userId}")
-    public ResponseEntity<User> getUser(@PathVariable Long User_Id) {
-        Optional<User> user = userRepository.findById(User_Id);
+    public ResponseEntity<User> getUser(@PathVariable Integer User_Id) {
+        Optional<User> user = userService.getUser(User_Id);
         if (user.isPresent()) {
             return new ResponseEntity<>(user.get(), HttpStatus.OK);
         } else {
@@ -42,22 +39,15 @@ public class UserController {
 
     @GetMapping("/getAllUser")
     public ResponseEntity<List<User>> getAllUsers() {
-        List<User> user = userRepository.findAll();
+        List<User> user = userService.getAllUsers();
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PutMapping("/updateUserInfo/{User_Id}")
-    public ResponseEntity<User> updateUserInfo(@PathVariable Long User_Id, @Valid @RequestBody User NewUser) {
-        Optional<User> optionalUser = userRepository.findById(User_Id);
+    public ResponseEntity<User> updateUserInfo(@PathVariable Integer User_Id, @Valid @RequestBody User NewUser) {
+        Optional<User> optionalUser = userService.getUser(User_Id);
         if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            user.setUsername(NewUser.getUsername());
-            user.setDateOfBirth(NewUser.getDateOfBirth());
-            user.setEmail(NewUser.getEmail());
-            user.setPhoneNumber(NewUser.getPhoneNumber());
-            user.setDate(LocalDate.now());
-            user.setTime(LocalTime.now());
-            User savedUser = userRepository.save(user);
+            User savedUser = userService.updateUserInfo(Long.valueOf(User_Id),NewUser);
             return new ResponseEntity<>(savedUser, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -65,9 +55,9 @@ public class UserController {
     }
 
     @DeleteMapping("/deleteUser/{User_Id}")
-    public ResponseEntity<HttpStatus> deleteUser(@PathVariable Long User_Id) {
+    public ResponseEntity<HttpStatus> deleteUser(@PathVariable Integer User_Id) {
         try {
-            userRepository.deleteById(User_Id);
+            userService.deleteUser(User_Id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
