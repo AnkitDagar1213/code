@@ -1,7 +1,7 @@
-package com.Usermanagementsystem.controller;
+package com.example.Usermanagementsystem.controller;
 
-import com.Usermanagementsystem.model.User;
-import com.Usermanagementsystem.service.UserService;
+import com.example.Usermanagementsystem.model.User;
+import com.example.Usermanagementsystem.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
