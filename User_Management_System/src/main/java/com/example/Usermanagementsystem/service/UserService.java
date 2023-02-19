@@ -1,7 +1,7 @@
-package com.example.Usermanagementsystem.service;
+package com.Usermanagementsystem.service;
 
-import com.example.Usermanagementsystem.model.User;
-import com.example.Usermanagementsystem.repository.UserRepository;
+import com.Usermanagementsystem.model.User;
+import com.Usermanagementsystem.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +18,8 @@ public class UserService {
         user.setTime(LocalTime.now());
         return userRepository.save(user);
     }
-    public Optional<User> getUser(Long User_Id) {
-        return userRepository.findById(User_Id);
+    public Optional<User> getUser(Integer User_Id) {
+        return userRepository.findById(Long.valueOf(User_Id));
     }
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -41,9 +41,9 @@ public class UserService {
             throw new UserNotFoundException("User with ID " + User_Id + " not found");
         }
     }
-    public void deleteUser(Long User_Id) {
+    public void deleteUser(Integer User_Id) {
         try {
-            userRepository.deleteById(User_Id);
+            userRepository.deleteById(Long.valueOf(User_Id));
         } catch (Exception e) {
             throw new UserNotFoundException("User with ID " + User_Id + " not found");
         }
